@@ -1,0 +1,115 @@
+-- USE ECOMMERCE_ANALYTICS;
+-- =========================================================
+-- PHASE 2: SALES ANALYSIS
+-- =========================================================
+
+-- Question 9:
+-- How much revenue was generated through each payment method
+-- from completed orders?
+SELECT P.PAYMENT_METHOD,SUM(P.AMOUNT) AS TOTAL_REVENUE FROM PAYMENTS P JOIN ORDERS O
+ON P.ORDER_ID=O.ORDER_ID
+WHERE O.ORDER_STATUS='completed'
+GROUP BY PAYMENT_METHOD;
+
+-- =========================================================
+-- QUESTION 10:
+-- WHAT IS THE TOTAL REVENUE GENERATED IN EACH MONTH
+-- FROM COMPLETED ORDERS?
+-- =========================================================
+
+SELECT 
+    YEAR(O.ORDER_DATE) AS ORDER_YEAR,
+    MONTH(O.ORDER_DATE) AS ORDER_MONTH,
+    SUM(P.AMOUNT) AS TOTAL_REVENUE
+FROM PAYMENTS P
+JOIN ORDERS O
+    ON P.ORDER_ID = O.ORDER_ID
+WHERE O.ORDER_STATUS = 'COMPLETED'
+GROUP BY 
+    YEAR(O.ORDER_DATE),
+    MONTH(O.ORDER_DATE)
+ORDER BY 
+    ORDER_YEAR,
+    ORDER_MONTH;
+    
+-- =========================================================
+-- QUESTION 11:
+-- WHAT IS THE TOTAL REVENUE GENERATED FROM EACH CITY
+-- BY COMPLETED ORDERS?
+-- =========================================================
+SELECT C.CITY,SUM(P.AMOUNT) AS TOTAL_REVENUE FROM CUSTOMERS C JOIN 
+ORDERS O
+ON C.CUSTOMER_ID=O.CUSTOMER_ID
+JOIN PAYMENTS P 
+ON O.ORDER_ID=P.ORDER_ID
+WHERE O.ORDER_STATUS='completed'
+GROUP BY C.CITY ;
+
+-- =========================================================
+-- QUESTION 12:
+-- WHAT IS THE TOTAL REVENUE GENERATED FROM EACH STATE
+-- BY COMPLETED ORDERS?
+-- =========================================================
+SELECT C.STATE,SUM(P.AMOUNT) AS TOTAL_REVENUE FROM CUSTOMERS C JOIN 
+ORDERS O
+ON C.CUSTOMER_ID=O.CUSTOMER_ID
+JOIN PAYMENTS P 
+ON O.ORDER_ID=P.ORDER_ID
+WHERE O.ORDER_STATUS='completed'
+GROUP BY C.STATE ;
+
+-- =========================================================
+-- QUESTION 13:
+-- WHAT IS THE AVERAGE ORDER VALUE FOR EACH MONTH
+-- FROM COMPLETED ORDERS?
+-- =========================================================
+
+SELECT 
+    YEAR(O.ORDER_DATE) AS ORDER_YEAR,
+    MONTH(O.ORDER_DATE) AS ORDER_MONTH,
+    SUM(P.AMOUNT) AS TOTAL_REVENUE,
+    ROUND(AVG(P.AMOUNT),2)AS AVERAGE_ORDER_VALUE
+FROM PAYMENTS P
+JOIN ORDERS O
+    ON P.ORDER_ID = O.ORDER_ID
+WHERE O.ORDER_STATUS = 'COMPLETED'
+GROUP BY 
+    YEAR(O.ORDER_DATE),
+    MONTH(O.ORDER_DATE)
+ORDER BY 
+    ORDER_YEAR,
+    ORDER_MONTH;
+    
+-- =========================================================
+-- QUESTION 14:
+-- WHICH CITY GENERATED THE HIGHEST REVENUE
+-- FROM COMPLETED ORDERS?
+-- =========================================================
+SELECT C.CITY,SUM(P.AMOUNT) AS TOTAL_REVENUE FROM CUSTOMERS C JOIN 
+ORDERS O
+ON C.CUSTOMER_ID=O.CUSTOMER_ID
+JOIN PAYMENTS P 
+ON O.ORDER_ID=P.ORDER_ID
+WHERE O.ORDER_STATUS='completed'
+GROUP BY C.CITY 
+ORDER BY TOTAL_REVENUE DESC LIMIT 1 ;
+
+-- =========================================================
+-- QUESTION 15:
+-- WHICH MONTH GENERATED THE HIGHEST REVENUE
+-- FROM COMPLETED ORDERS?
+-- =========================================================
+SELECT 
+    YEAR(O.ORDER_DATE) AS ORDER_YEAR,
+    MONTH(O.ORDER_DATE) AS ORDER_MONTH,
+    SUM(P.AMOUNT) AS TOTAL_REVENUE
+FROM PAYMENTS P
+JOIN ORDERS O
+    ON P.ORDER_ID = O.ORDER_ID
+WHERE O.ORDER_STATUS = 'COMPLETED'
+GROUP BY 
+    YEAR(O.ORDER_DATE),
+    MONTH(O.ORDER_DATE)
+ORDER BY 
+TOTAL_REVENUE DESC LIMIT 1;
+    
